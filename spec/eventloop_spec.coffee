@@ -37,6 +37,17 @@ Vows.describe("EventLoop").addBatch(
         "should fire all timeout events": (browser)->
           assert.equal browser.document.title, "One Two Three"
 
+    "defers":
+      Browser.wants "http://localhost:3003/eventloop/timeout"
+        topic: (browser)->
+          browser.window.setTimeout ->
+            @document.title += " Two"
+          , 0
+          browser.wait 5, @callback
+        "should fire if timeout is 0": (browser) ->
+          assert.equal browser.document.title, "One Two"
+
+
     "cancel timeout":
       Browser.wants "http://localhost:3003/eventloop/timeout"
         topic: (browser)->
